@@ -83,6 +83,6 @@ app.post("/login", async (req, res) => {
 //you can add cors() before auth to enable cors for a specific route
 app.post("/home", auth, (req, res) => {
   res.status(200).send(`Welcome home, You are logged in ${req.user.email}`);
-});
+
 
 module.exports = app;
