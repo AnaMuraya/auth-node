@@ -45,7 +45,32 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {});
+app.post("/login", async (req, res) => {
+  try {
+    //get user input
+    const { email, password } = req.body;
+    //verify user's input
+    !(email && password) && res.status(400).send("All input is required");
+    //check if user is genuine
+    const user = await User.findOne({ email });
+    !user && res.status(401).send("User does not exist");
+    //check if password is correct
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    !isPasswordCorrect && res.status(401).send("Password is incorrect");
+    //construct a JWT token that is signed
+    const token = jwt.sign({ userId: user._id, email }, process.env.TOKEN_KEY, {
+      expiresIn: "5h",
+    });
+    //save token
+    user.token = token;
+    // return new user
+    res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send("Something went wrong");
+  }
+
+});
 
 module.exports = app;
 
