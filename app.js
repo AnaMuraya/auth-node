@@ -3,13 +3,20 @@ require("./config/database").connect();
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 const auth = require("./middleware/auth");
 //user context
 const User = require("./model/user");
 
 const app = express();
 
-app.use(express.json());
+const corsOptions = {
+  origin: "http://localhost:4001",
+  optionsSuccessStatus: 200
+};
+
+app.use(express.json({ limit: "50mb" }));
+app.use(cors(corsOptions));
 // app.use(express.urlencoded({ extended: true }));
 
 app.post("/register", async (req, res) => {
@@ -72,8 +79,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//you can add cors() before auth to enable cors for a single route
 app.post("/home", auth, (req, res) => {
-  res.status(200).send("Welcome home, You are logged in");
+  res.status(200).send(`Welcome home, You are logged in ${req.user.email}`);
 });
 
 module.exports = app;
