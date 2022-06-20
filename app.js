@@ -21,6 +21,7 @@ app.post("/register", async (req, res) => {
     //check if user already exists
     const existingUser = await User.findOne({ email });
     existingUser && res.status(409).send("User already exists, pleae login");
+
     //protect user's password via encryption using bcrypt
     encryptedPassword = await bcrypt.hash(password, 10);
     //make user account in the database
