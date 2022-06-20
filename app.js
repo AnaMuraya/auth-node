@@ -3,6 +3,7 @@ require("./config/database").connect();
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const auth = require("./middleware/auth");
 //user context
 const User = require("./model/user");
 
@@ -69,17 +70,10 @@ app.post("/login", async (req, res) => {
     console.log(err);
     res.status(400).send("Something went wrong");
   }
+});
 
+app.post("/home", auth, (req, res) => {
+  res.status(200).send("Welcome home, You are logged in");
 });
 
 module.exports = app;
-
-
-// try {
-//     const user = await User.findByCredentials(req.body.email, req.body.password);
-//     const token = await user.generateAuthToken();
-//     res.send({ user, token });
-// }
-// catch (error) {
-//     res.status(400).send(error);
-// }
