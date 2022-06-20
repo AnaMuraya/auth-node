@@ -5,12 +5,7 @@ const {MONGO_URI} = process.env;
 exports.connect = async () => {
     // Connect to MongoDB
     try {
-        await mongoose.connect(MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false
-        });
+        await mongoose.connect(MONGO_URI);
         console.log('MongoDB connected');
     } catch (error) {
         console.log(error);
